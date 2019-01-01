@@ -1,11 +1,8 @@
-// global variables
-var canvasWidth = 600;
-var canvasHeight = 600;
+var canvasWidth = 400;
+var canvasHeight = 400;
 var itemSize = 30;
 var halfSize = Math.floor(itemSize / 2);
-var doubleSize = itemSize * 2;
 var oneQSize = itemSize * 0.25;
-var threeQSize = itemSize * 0.75;
 var sizeText = 14;
 var startX = halfSize;
 var startY = halfSize + sizeText;
@@ -20,17 +17,15 @@ var counter = itemSize;
 function setup() {
 	createCanvas(canvasWidth, canvasHeight);
 	sid = new Snakey(startX, startY);
-
-	// frameRate(30);
 }
 
 function draw() {
 	if (gameState) {
 		background(51);
+		sid.show();
 		sid.update();
 		sid.updateTail();
 		sid.snakeCrash();
-		sid.show();
 		sid.eaten();
 	} else {
 		alert('You scored ' + gameScore);
