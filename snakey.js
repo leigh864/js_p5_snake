@@ -96,11 +96,13 @@ class Snakey {
 			gameState = false;
 		}
 
-		// check not hit the tail
-		for (let i = 1; i < this.tail - 1; i++) {
+		// check not hit the tail - there is await of 30 pixels between
+		// moves - so dont check till we get the next one, as seomtimes tail is waiting for a 'full move' before adding the segment (its part way through)
+		for (let i = 2; i < this.tail && this.tail <= this.moves.length; i++) {
+			// console.log(`i ${i} this.tail ${this.tail}`);
 			var collision = dist(this.x, this.y, this.moves[i].x, this.moves[i].y);
 
-			if (collision + 1 < itemSize) {
+			if (collision < itemSize) {
 				console.log(
 					'>>>>>>>>>> ****BOOM***** collision = ',
 					collision,
@@ -139,8 +141,10 @@ class Snakey {
 
 	createFood() {
 		foodSeed = false;
-		this.foodX = Math.floor(Math.random() * (canvasWidth - itemSize));
-		this.foodY = Math.floor(Math.random() * (canvasHeight - itemSize));
+		this.foodX =
+			halfSize + Math.floor(Math.random() * (canvasWidth - itemSize));
+		this.foodY =
+			halfSize + Math.floor(Math.random() * (canvasHeight - itemSize));
 	}
 
 	eaten() {
