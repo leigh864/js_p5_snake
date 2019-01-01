@@ -1,6 +1,6 @@
-var canvasWidth = 400;
-var canvasHeight = 400;
-var itemSize = 30;
+var canvasWidth = 600;
+var canvasHeight = 600;
+var itemSize = 25;
 var halfSize = Math.floor(itemSize / 2);
 var oneQSize = itemSize * 0.25;
 var sizeText = 14;
