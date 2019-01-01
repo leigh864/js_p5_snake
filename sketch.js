@@ -6,14 +6,16 @@ var halfSize = Math.floor(itemSize / 2);
 var doubleSize = itemSize * 2;
 var oneQSize = itemSize * 0.25;
 var threeQSize = itemSize * 0.75;
+var sizeText = 14;
 var startX = halfSize;
-var startY = halfSize;
+var startY = halfSize + sizeText;
 var sid;
 var gameScore = 0;
 var direction = 1;
 var foodSeed = true;
-var foodScore = 10000;
+var foodScore = 1000;
 var gameState = true;
+var counter = itemSize;
 
 function setup() {
 	createCanvas(canvasWidth, canvasHeight);
@@ -26,6 +28,7 @@ function draw() {
 	if (gameState) {
 		background(51);
 		sid.update();
+		sid.updateTail();
 		sid.snakeCrash();
 		sid.show();
 		sid.eaten();

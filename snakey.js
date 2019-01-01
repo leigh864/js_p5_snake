@@ -8,6 +8,7 @@ class Snakey {
 		this.foodY = 0;
 		this.tail = 0;
 		this.segments = [];
+		this.moves = [];
 	}
 
 	show() {
@@ -22,6 +23,14 @@ class Snakey {
 	drawSnake() {
 		fill('#0f0');
 		ellipse(this.x, this.y, itemSize, itemSize);
+
+		for (let i = 0; i < this.tail; i++) {
+			fill('#0f0');
+			ellipse(this.moves[i].x, this.moves[i].y, itemSize, itemSize);
+		}
+
+		textSize(sizeText);
+		text('Score=' + gameScore + '  tail=' + this.tail, 5, sizeText);
 	}
 
 	drawStar() {
@@ -55,6 +64,28 @@ class Snakey {
 		}
 	}
 
+	updateTail() {
+		if (this.moves.length > this.tail + 1) {
+			this.moves.pop();
+			console.log('>>>>>>>>>>>>> tail=' + this.tail);
+			for (let i = 0; i < this.moves.length; i++) {
+				console.log('i=' + JSON.stringify(this.moves[i]));
+			}
+		}
+		counter++;
+
+		if (counter >= itemSize) {
+			this.moves.unshift({ x: this.x, y: this.y });
+			counter = 0;
+		}
+
+		console.log(
+			`counter=${counter} itemSize=${itemSize} this.tail=${
+				this.tail
+			} this.moves.length=${this.moves.length}`
+		);
+	}
+
 	snakeCrash() {
 		this.checkEdge();
 		if (
@@ -64,9 +95,59 @@ class Snakey {
 			this.shellY < 0
 		) {
 			gameState = false;
-		} else {
-			gameScore++;
 		}
+
+		// check not hit the tail
+		for (let i = 1; i < this.tail - 1; i++) {
+			var collision = dist(
+				this.x,
+				this.y,
+				this.segments[i].x,
+				this.segments[i].y
+			);
+			if (collision < halfSize) {
+				var absX = Math.abs(this.x - this.segments[i].x);
+				var absY = Math.abs(this.y - this.segments[i].y);
+				if (absX > absY) {
+					const a = absX;
+					absX = absY;
+					absY = a;
+				}
+				var myHypot = Math.hypot(absX, absY);
+
+				// double hypot(double x,double y)
+				// x = abs(x);
+				// y = abs(y);
+				// if (y > x) swap(x, y);
+				// if (x == 0.0) return y;
+				// double t = y / x;
+				// return x * sqrt(1 + t * t);
+
+				console.log(
+					'>>>>>>>>>> ****BOOM***** collision = ',
+					collision,
+					' i was ',
+					i,
+					' my hypot=',
+					myHypot,
+					absX,
+					absY
+				);
+				console.log(
+					`this.x=${this.x} this.y=${this.y} this.segments[${i}].x=${
+						this.segments[i].x
+					} this.segments[${i}].y=${this.segments[i].y}`
+				);
+				for (let i = 0; i < this.segments.length; i++) {
+					console.log('i', i, 'segments=' + JSON.stringify(this.segments[i]));
+				}
+				for (let i = 0; i < this.moves.length; i++) {
+					console.log('i', i, 'moves=' + JSON.stringify(this.moves[i]));
+				}
+				gameState = false;
+			}
+		}
+		if (gameState) gameScore++;
 	}
 
 	// x and y are at centre of circle
@@ -91,15 +172,22 @@ class Snakey {
 	}
 
 	eaten() {
-		var distance = dist(
-			this.x,
-			this.y,
-			this.foodX + halfSize,
-			this.foodY + halfSize
-		);
+		var distance = dist(this.x, this.y, this.foodX, this.foodY);
 		// console.log(distance);
-		if (distance < halfSize + 1) {
+		if (distance < itemSize + 1) {
 			this.tail++;
+			var newSegment = {
+				x: this.moves[0].x,
+				y: this.moves[0].y,
+			};
+			console.log('EATEN >>>>>>>>>>>>>>>>>>> newSegment=', newSegment);
+			this.segments.push(newSegment);
+			for (let i = 0; i < this.segments.length; i++) {
+				console.log('i', i, 'segment=' + JSON.stringify(this.segments[i]));
+			}
+			for (let i = 0; i < this.moves.length; i++) {
+				console.log('i', i, 'moves=' + JSON.stringify(this.moves[i]));
+			}
 			gameScore += foodScore;
 			console.log('YUMMY ' + distance + ' tail now ' + this.tail);
 			console.log(`gamescore=${gameScore}`);
