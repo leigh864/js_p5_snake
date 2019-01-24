@@ -28,7 +28,7 @@ function draw() {
 		sid.snakeCrash();
 		sid.eaten();
 	} else {
-		alert('You scored ' + gameScore);
+		alert('You scored ' + gameScore + ' tail=' + sid.tail);
 		remove();
 	}
 }
